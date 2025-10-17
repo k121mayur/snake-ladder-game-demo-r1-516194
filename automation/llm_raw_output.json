@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "path": "index.html",
+      "content": "<!doctype html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Snake and Ladder Game</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <h1>Snake and Ladder Game</h1>\n    <div id=\"board\"></div>\n    <div id=\"controls\">\n        <button id=\"rollDice\">Roll Dice</button>\n        <p id=\"currentPlayer\">Current Player: Player 1</p>\n        <p id=\"message\"></p>\n    </div>\n    <script src=\"script.js\"></script>\n</body>\n</html>",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "styles.css",
+      "content": "body {\n    font-family: Arial, sans-serif;\n    text-align: center;\n}\n\n#board {\n    display: grid;\n    grid-template-columns: repeat(10, 50px);\n    grid-template-rows: repeat(10, 50px);\n    margin: 20px auto;\n    width: 500px;\n    height: 500px;\n    border: 2px solid #000;\n}\n\n.square {\n    border: 1px solid #ccc;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 20px;\n}\n\n.player {\n    background-color: lightblue;\n    border-radius: 50%;\n    width: 30px;\n    height: 30px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n#controls {\n    margin-top: 20px;\n}",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "script.js",
+      "content": "const boardSize = 10;\nconst snakes = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };\nconst ladders = { 1: 38, 4: 14, 9: 31, 21: 42, 28: 84, 36: 44, 51: 67, 71: 91, 80: 100 };\nlet playerPositions = [0, 0];\nlet currentPlayer = 0;\n\nfunction createBoard() {\n    const board = document.getElementById('board');\n    for (let i = boardSize * boardSize; i > 0; i--) {\n        const square = document.createElement('div');\n        square.classList.add('square');\n        square.id = 'square-' + i;\n        square.innerText = i;\n        board.appendChild(square);\n    }\n}\n\nfunction rollDice() {\n    const diceRoll = Math.floor(Math.random() * 6) + 1;\n    const newPosition = playerPositions[currentPlayer] + diceRoll;\n    if (newPosition <= 100) {\n        playerPositions[currentPlayer] = newPosition;\n        updatePosition();\n        checkForWinner();\n        currentPlayer = (currentPlayer + 1) % 2;\n        document.getElementById('currentPlayer').innerText = 'Current Player: Player ' + (currentPlayer + 1);\n    }\n}\n\nfunction updatePosition() {\n    const playerToken = document.getElementById('player-' + (currentPlayer + 1));\n    if (playerToken) playerToken.remove();\n    const position = playerPositions[currentPlayer];\n    const square = document.getElementById('square-' + position);\n    const token = document.createElement('div');\n    token.classList.add('player');\n    token.id = 'player-' + (currentPlayer + 1);\n    token.innerText = currentPlayer + 1;\n    square.appendChild(token);\n    if (snakes[position]) {\n        playerPositions[currentPlayer] = snakes[position];\n        updatePosition();\n    } else if (ladders[position]) {\n        playerPositions[currentPlayer] = ladders[position];\n        updatePosition();\n    }\n}\n\nfunction checkForWinner() {\n    if (playerPositions[currentPlayer] === 100) {\n        document.getElementById('message').innerText = 'Player ' + (currentPlayer + 1) + ' wins!';\n        document.getElementById('rollDice').disabled = true;\n    }\n}\n\ndocument.getElementById('rollDice').addEventListener('click', rollDice);\ncreateBoard();",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "README.md",
+      "content": "# Snake and Ladder Game\n\n## Overview\nThis is a browser-based Snake and Ladder game for two players. Players take turns rolling a dice to advance their tokens on a 10x10 board. Landing on a snake or ladder updates their position accordingly, and the first player to reach square 100 wins the game.\n\n## Gameplay Controls\n- Click the **Roll Dice** button to roll the dice and move your token.\n- The game alternates turns between Player 1 and Player 2.\n- The game announces the winner when a player reaches the final square (100).\n\n## Setup Instructions\nSimply open `index.html` in a web browser to start playing the game.",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "LICENSE",
+      "content": "MIT License\n\nCopyright (c) 2023\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\n... (full license text omitted for brevity) ...\n\n",
+      "encoding": "utf-8"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "content": "name: Deploy to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v2\n      - name: Deploy to GitHub Pages\n        uses: peaceiris/actions-gh-pages@v3\n        with:\n          github_token: ${{ secrets.GITHUB_TOKEN }}\n          publish_dir: ./\n",
+      "encoding": "utf-8"
+    }
+  ]
+}
